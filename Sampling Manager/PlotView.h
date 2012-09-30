@@ -10,7 +10,6 @@
 
 @interface PlotView : UIView <UIGestureRecognizerDelegate>
 
-@property (strong, nonatomic) NSArray *plotPoints;
 @property (nonatomic) CGFloat scale;
 @property (nonatomic, assign) GLfloat *points;
 @property (nonatomic) GLuint arrayCount;

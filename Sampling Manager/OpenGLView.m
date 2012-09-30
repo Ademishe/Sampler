@@ -16,7 +16,8 @@
 
 @implementation OpenGLView
 
-@synthesize plotPoints = _plotPoints;
+@synthesize points = _points;
+@synthesize arrayCount = _arrayCount;
 
 + (Class)layerClass
 {
@@ -27,6 +28,7 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
+        self.arrayCount = 0;
         context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
         if (!context || ![EAGLContext setCurrentContext:context])
             return nil;
@@ -43,12 +45,7 @@
 
 - (void)render
 {
-    const GLfloat squareVertices[] = {
-        -0.5f, -0.5f,
-        0.5f,  -0.5f,
-        -0.5f,  0.5f,
-        0.5f,   0.5f,
-    };
+    if (self.arrayCount == 0) return;
     
     [EAGLContext setCurrentContext:context];
     
@@ -62,7 +59,7 @@
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
-    glVertexPointer(2, GL_FLOAT, 0, squareVertices);
+    glVertexPointer(2, GL_FLOAT, 0, _points);
     glEnableClientState(GL_VERTEX_ARRAY);
     glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
     
@@ -104,6 +101,16 @@
         [EAGLContext setCurrentContext:nil];
 	
 	context = nil;
+}
+
+- (void)handelPanGesture:(UIPanGestureRecognizer *)gesture
+{
+    
+}
+
+- (void)handelPinchGesture:(UIPinchGestureRecognizer *)gesture
+{
+    
 }
 
 @end

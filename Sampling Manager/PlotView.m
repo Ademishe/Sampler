@@ -13,7 +13,6 @@
 
 @implementation PlotView
 
-@synthesize plotPoints = _plotPoints;
 @synthesize scale = _scale;
 @synthesize points = _points;
 @synthesize arrayCount = _arrayCount;
@@ -22,6 +21,7 @@
 {
 	self = [super initWithCoder:aDecoder];
 	if (self) {
+        self.arrayCount = 0;
 	}
 	return self;
 }
@@ -71,29 +71,22 @@
 
 - (void)drawRect:(CGRect)rect
 {
-	if (self.plotPoints == nil) return;
+    if (self.arrayCount == 0) return;
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 	CGContextSetRGBStrokeColor(ctx, 0.0, 0.5, 1.0, 1.0);
 	CGContextSetRGBFillColor(ctx, 0.0, 0.5, 1.0, 1.0);
 	CGContextSetLineWidth(ctx, 2.0);
 	
-//	CGFloat zeroX = [[[self.plotPoints objectAtIndex:0] objectForKey:@"x"] floatValue]*self.scale;
-//	CGFloat zeroY = [[[self.plotPoints objectAtIndex:0] objectForKey:@"y"] floatValue]*self.scale;
-//	double zeroZ = [[[self.plotPoints objectAtIndex:0] objectForKey:@"z"] doubleValue];
-	
-	CGFloat zeroX = _points[0];
-	CGFloat zeroY = _points[1];
-//	CGFloat zeroZ = _points[2];
+	CGFloat zeroX = _points[0]*self.scale;
+	CGFloat zeroY = _points[1]*self.scale;
 	
 	CGContextFillEllipseInRect(ctx, CGRectMake(zeroX - POINT_SIZE / 2.0, zeroY - POINT_SIZE / 2.0, POINT_SIZE, POINT_SIZE));
 	CGContextBeginPath(ctx);
 	CGContextMoveToPoint(ctx, zeroX, zeroY);
 	
 	for (int i = 3; i < _arrayCount; i += 3) {
-//		CGFloat X = [[[self.plotPoints objectAtIndex:i] objectForKey:@"x"] floatValue]*self.scale;
-//		CGFloat Y = [[[self.plotPoints objectAtIndex:i] objectForKey:@"y"] floatValue]*self.scale;
-		CGFloat X = _points[i];
-		CGFloat Y = _points[i+1];
+		CGFloat X = _points[i]*self.scale;
+		CGFloat Y = _points[i+1]*self.scale;
 		
 		CGContextAddLineToPoint(ctx, X, Y);
 		CGContextStrokePath(ctx);

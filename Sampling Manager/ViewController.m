@@ -26,7 +26,6 @@
 @synthesize plotter = _plotter;
 @synthesize plotter3D = _plotter3D;
 @synthesize toggleButton = _toggleButton;
-@synthesize points = _points;
 @synthesize arrayWithPoints = _arrayWithPoints;
 
 - (void)viewDidLoad
@@ -38,12 +37,7 @@
     accelX = accelY = accelZ = 0.0;
     
     accelManager = [CMMotionManager new];
-    accelManager.accelerometerUpdateInterval = 0.02;
-//    NSDictionary *pointCoords = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:0.0], @"x",
-//                                                                           [NSNumber numberWithFloat:0.0], @"y",
-//                                                                           [NSNumber numberWithFloat:0.0], @"z", nil];
-//    self.points = [NSMutableArray new];
-//    [self.points addObject:pointCoords];
+    accelManager.accelerometerUpdateInterval = 0.08;
 	
 	[self.plotter setBounds:CGRectMake(-self.plotter.bounds.size.width / 2.0, -self.plotter.bounds.size.height / 2.0, self.plotter.bounds.size.width, self.plotter.bounds.size.height)];
 	
@@ -55,6 +49,14 @@
 	[pan setMaximumNumberOfTouches:2];
 	[self.plotter addGestureRecognizer:pan];
     
+    UIPinchGestureRecognizer *pinch3D = [[UIPinchGestureRecognizer alloc] initWithTarget:self.plotter3D action:@selector(handelPinchGesture:)];
+	[pinch3D setDelegate:self.plotter3D];
+	[self.plotter3D addGestureRecognizer:pinch3D];
+	UIPanGestureRecognizer *pan3D = [[UIPanGestureRecognizer alloc] initWithTarget:self.plotter3D action:@selector(handelPanGesture:)];
+	[pan3D setDelegate:self.plotter3D];
+	[pan3D setMaximumNumberOfTouches:2];
+	[self.plotter3D addGestureRecognizer:pan3D];
+    
     CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.plotter3D.layer;
     
     eaglLayer.opaque = TRUE;
@@ -65,7 +67,6 @@
 
 - (void)viewDidUnload
 {
-    [self setPoints:nil];
     [self setToggleButton:nil];
     [self setPlotter:nil];
 	[self setPlotter3D:nil];
@@ -92,18 +93,12 @@
         [self.toggleButton setTitle:@"Start sampling" forState:UIControlStateNormal];
         
         [accelManager stopAccelerometerUpdates];
-//		for (int i = 0; i < memoryCount; i += 3)
-//			NSLog(@"x = %f, y = %f, z = %f", self.arrayWithPoints[i], self.arrayWithPoints[i+1], self.arrayWithPoints[i+2]);
 		[self draw2DPlot];
-//        [self draw3DPlot];
+        [self draw3DPlot];
     }
     else {
         isSampling = YES;
         [self.toggleButton setTitle:@"Stop sampling" forState:UIControlStateNormal];
-		
-//		NSMutableArray *newPoints = [NSMutableArray arrayWithObject:[self.points objectAtIndex:0]];
-//		[self setPoints:nil];
-//		self.points = newPoints;
 		
 		free(self.arrayWithPoints);
 		_arrayWithPoints = NULL;
@@ -120,15 +115,7 @@
                                                accelX = accelerometerData.acceleration.x - ( (accelerometerData.acceleration.x * kFilteringFactor) + (accelX * (1.0 - kFilteringFactor)) );
                                                accelY = accelerometerData.acceleration.y - ( (accelerometerData.acceleration.y * kFilteringFactor) + (accelY * (1.0 - kFilteringFactor)) );
                                                accelZ = accelerometerData.acceleration.z - ( (accelerometerData.acceleration.z * kFilteringFactor) + (accelZ * (1.0 - kFilteringFactor)) );
-//                                               NSDictionary *point = (NSDictionary *)[self.points lastObject];
-//                                               NSNumber *newX = [NSNumber numberWithFloat:([[point objectForKey:@"x"] floatValue] + accelX)];
-//                                               NSNumber *newY = [NSNumber numberWithFloat:([[point objectForKey:@"y"] floatValue] - accelY)];
-//                                               NSNumber *newZ = [NSNumber numberWithFloat:([[point objectForKey:@"z"] floatValue] + accelZ)];
-//                                               NSDictionary *newPoint = [NSDictionary dictionaryWithObjectsAndKeys:newX, @"x",
-//                                                                                                                   newY, @"y",
-//                                                                                                                   newZ, @"z", nil];
-//                                               [self.points addObject:newPoint];
-											   
+                                               
 											   GLfloat *tempArray = (GLfloat *)realloc(_arrayWithPoints, (memoryCount + 3) * sizeof(GLfloat));
 											   if (tempArray == NULL) {
 												   NSLog(@"Memory error!");
@@ -151,18 +138,6 @@
 
 - (void)draw2DPlot
 {
-//	NSDictionary *point1 = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:1.0], @"x",
-//																	  [NSNumber numberWithFloat:1.0], @"y",
-//																	  [NSNumber numberWithFloat:0.0], @"z", nil];
-//	NSDictionary *point2 = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:50.0], @"x",
-//																	  [NSNumber numberWithFloat:40.0], @"y",
-//																	  [NSNumber numberWithFloat:0.0], @"z", nil];
-//	NSDictionary *point3 = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:100.0], @"x",
-//																	  [NSNumber numberWithFloat:100.0], @"y",
-//																	  [NSNumber numberWithFloat:0.0], @"z", nil];
-//	[self.plotter setPlotPoints:[NSArray arrayWithObjects:point1, point2, point3, nil]];
-	
-//	[self.plotter setPlotPoints:(NSArray *)self.points];
 	[self.plotter setArrayCount:memoryCount];
 	[self.plotter setPoints:self.arrayWithPoints];
 	[self.plotter setNeedsDisplay];
@@ -170,7 +145,8 @@
 
 - (void)draw3DPlot
 {
-    [self.plotter3D setPlotPoints:(NSArray *)self.points];
+    [self.plotter3D setArrayCount:memoryCount];
+    [self.plotter3D setPoints:self.arrayWithPoints];
     [self.plotter3D render];
 }
 

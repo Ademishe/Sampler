@@ -10,7 +10,7 @@
 
 @class CAEAGLLayer;
 
-@interface OpenGLView : UIView {
+@interface OpenGLView : UIView <UIGestureRecognizerDelegate> {
     EAGLContext *context;
     
     GLint backingWidth;
@@ -18,9 +18,12 @@
     GLuint defaultFramebuffer, colorRenderbuffer;
 }
 
-@property (strong, nonatomic) NSArray *plotPoints;
+@property (nonatomic, assign) GLfloat *points;
+@property (nonatomic) GLuint arrayCount;
 
 - (void)render;
 - (BOOL)resizeFromLayer:(CAEAGLLayer *)layer;
+- (void)handelPinchGesture:(UIPinchGestureRecognizer *)gesture;
+- (void)handelPanGesture:(UIPanGestureRecognizer *)gesture;
 
 @end

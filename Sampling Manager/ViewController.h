@@ -22,7 +22,6 @@
 @property (weak, nonatomic) IBOutlet PlotView *plotter;
 @property (weak, nonatomic) IBOutlet OpenGLView *plotter3D;
 @property (weak, nonatomic) IBOutlet UIButton *toggleButton;
-@property (strong, nonatomic) NSMutableArray *points;
 @property (readonly, assign, nonatomic) GLfloat *arrayWithPoints;
 
 - (IBAction)toggleSampling:(UIButton *)sender;
