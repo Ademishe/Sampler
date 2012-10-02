@@ -13,6 +13,9 @@
 #import <OpenGLES/EAGL.h>
 #import <OpenGLES/EAGLDrawable.h>
 
+#define DEFAULT_LOOK_AT_RADIUS 7.0
+#define DEFAULT_LOOK_AT_TETTA M_PI/4.0
+#define DEFAULT_LOOK_AT_FI M_PI/4.0
 
 @implementation OpenGLView
 
@@ -38,6 +41,9 @@
         glBindFramebufferOES(GL_FRAMEBUFFER_OES, defaultFramebuffer);
         glBindRenderbufferOES(GL_RENDERBUFFER_OES, colorRenderbuffer);
         glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, colorRenderbuffer);
+		R = DEFAULT_LOOK_AT_RADIUS;
+		fi = DEFAULT_LOOK_AT_FI;
+		tetta = DEFAULT_LOOK_AT_TETTA;
     }
     
     return self;
@@ -51,10 +57,14 @@
     
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, defaultFramebuffer);
     glViewport(0, 0, backingWidth, backingHeight);
+//	gluLookAt(R*sin(tetta)*cos(fi),
+//			  R*sin(tetta)*sin(fi),
+//			  R*cos(tetta), 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
 	
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrthof(-1.0f, 1.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+//    glOrthof(-1.0f, 1.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+//	gluPerspective(90.0, 1.33, 0.1, 30.0);
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);

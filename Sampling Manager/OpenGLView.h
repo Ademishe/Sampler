@@ -16,6 +16,7 @@
     GLint backingWidth;
 	GLint backingHeight;
     GLuint defaultFramebuffer, colorRenderbuffer;
+	GLfloat R, tetta, fi;
 }
 
 @property (nonatomic, assign) GLfloat *points;
