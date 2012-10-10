@@ -13,9 +13,11 @@
 #import <OpenGLES/EAGL.h>
 #import <OpenGLES/EAGLDrawable.h>
 
-#define DEFAULT_LOOK_AT_RADIUS 7.0
+#define DEFAULT_LOOK_AT_RADIUS 5.0
 #define DEFAULT_LOOK_AT_TETTA M_PI/4.0
 #define DEFAULT_LOOK_AT_FI M_PI/4.0
+#define factor 0.001
+#define DOUBLE_M_PI 6.28318531
 
 void gluLookAt(GLfloat eyex, GLfloat eyey, GLfloat eyez,
 			   GLfloat centerx, GLfloat centery, GLfloat centerz,
@@ -108,6 +110,7 @@ void gluPerspective(double fovy, double aspect, double zNear, double zFar) {
 @interface OpenGLView ()
 
 - (void)prepare;
+- (void)drawAxis;
 
 @end
 
@@ -138,7 +141,7 @@ void gluPerspective(double fovy, double aspect, double zNear, double zFar) {
 		R = DEFAULT_LOOK_AT_RADIUS;
 		fi = DEFAULT_LOOK_AT_FI;
 		tetta = DEFAULT_LOOK_AT_TETTA;
-		[self prepare];
+//		[self prepare];
     }
     
     return self;
@@ -163,22 +166,43 @@ void gluPerspective(double fovy, double aspect, double zNear, double zFar) {
 
 - (void)render
 {
-    if (self.arrayCount == 0) return;
-	NSLog(@"Render");
+//    if (self.arrayCount == 0) return;
+    [self prepare];
     glClear(GL_COLOR_BUFFER_BIT);
 	gluLookAt(R*sin(tetta)*cos(fi),
 			  R*sin(tetta)*sin(fi),
 			  R*cos(tetta), 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
     
-    glVertexPointer(2, GL_FLOAT, 0, _points);
-    glEnableClientState(GL_VERTEX_ARRAY);
+//    glVertexPointer(2, GL_FLOAT, 0, _points);
+//    glEnableClientState(GL_VERTEX_ARRAY);
 	
     glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-	glLineWidth(2.0);
-    glDrawArrays(GL_LINE_STRIP, 0, 4);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    [self drawAxis];
+//	glLineWidth(2.0);
+//    glDrawArrays(GL_LINE_STRIP, 0, 4);
+    const GLfloat point1[] = {0.0f, 0.0f, 0.0f,
+                              1.0f, 0.0f, 0.0f};
+    glVertexPointer(3, GL_FLOAT, 0, point1);
+    glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+    glDrawArrays(GL_LINES, 0, 2);
     
-//    glBindRenderbufferOES(GL_RENDERBUFFER_OES, colorRenderbuffer);
+    glBindRenderbufferOES(GL_RENDERBUFFER_OES, colorRenderbuffer);
     [context presentRenderbuffer:GL_RENDERBUFFER_OES];
+}
+
+- (void)drawAxis
+{
+	//нарисовать стрелочки на осях!
+    glColor4f(1.0, 1.0, 1.0, 1.0);
+    GLfloat axisCoords[] = {0.0, 0.0, 10.0,
+                            0.0, 0.0, -10.0,
+                            0.0, 10.0, 0.0,
+                            0.0, -10.0, 0.0,
+                            10.0, 0.0, 0.0,
+                            -10.0, 0.0, 0.0};
+    glVertexPointer(3, GL_FLOAT, 0, axisCoords);
+    glDrawArrays(GL_LINES, 0, 6);
 }
 
 - (BOOL)resizeFromLayer:(CAEAGLLayer *)layer
@@ -220,10 +244,19 @@ void gluPerspective(double fovy, double aspect, double zNear, double zFar) {
 	if ((gesture.state == UIGestureRecognizerStateChanged) ||
 		gesture.state == UIGestureRecognizerStateEnded) {
 		CGPoint translation = [gesture translationInView:self];
-		GLfloat newTetta = tetta - translation.y;
-		GLfloat newFi = fi - translation.x;
-		tetta = newTetta;
-		fi = newFi;
+        NSLog(@"x = %f y = %f", translation.x, translation.y);
+		GLfloat newTetta = tetta - factor*translation.y;
+		GLfloat newFi = fi - factor*translation.x;
+        
+        if (newTetta > M_PI) newTetta -= M_PI;
+        else if (newTetta < 0.0f) newTetta += M_PI;
+        
+        if (newFi > DOUBLE_M_PI) newFi -= DOUBLE_M_PI;
+        else if (newFi < 0.0f) newFi += DOUBLE_M_PI;
+        
+        fi = newFi;
+        tetta = newTetta;
+        
 		[self render];
 	}
 }
@@ -232,8 +265,8 @@ void gluPerspective(double fovy, double aspect, double zNear, double zFar) {
 {
 	if ((gesture.state == UIGestureRecognizerStateChanged) ||
 		gesture.state == UIGestureRecognizerStateEnded) {
-			R *= gesture.scale;
-			[self render];
+        R *= gesture.scale;
+        [self render];
 	}
 }
 

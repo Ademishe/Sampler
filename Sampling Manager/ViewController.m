@@ -145,8 +145,8 @@
 
 - (void)draw3DPlot
 {
-    [self.plotter3D setArrayCount:memoryCount];
-    [self.plotter3D setPoints:self.arrayWithPoints];
+//    [self.plotter3D setArrayCount:memoryCount];
+//    [self.plotter3D setPoints:self.arrayWithPoints];
     [self.plotter3D render];
 }
 
