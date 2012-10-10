@@ -146,6 +146,7 @@ void gluPerspective(double fovy, double aspect, double zNear, double zFar) {
 
 - (void)prepare
 {
+	[EAGLContext setCurrentContext:context];
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, defaultFramebuffer);
     glViewport(0, 0, backingWidth, backingHeight);
 	
@@ -154,9 +155,7 @@ void gluPerspective(double fovy, double aspect, double zNear, double zFar) {
 	gluPerspective(90.0, 1.0, 0.1, 30.0);
 	
 	glMatrixMode(GL_MODELVIEW);
-	gluLookAt(R*sin(tetta)*cos(fi),
-			  R*sin(tetta)*sin(fi),
-			  R*cos(tetta), 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+	glLoadIdentity();
 	
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glShadeModel(GL_SMOOTH);
@@ -165,9 +164,11 @@ void gluPerspective(double fovy, double aspect, double zNear, double zFar) {
 - (void)render
 {
     if (self.arrayCount == 0) return;
-	
-    [EAGLContext setCurrentContext:context];
+	NSLog(@"Render");
     glClear(GL_COLOR_BUFFER_BIT);
+	gluLookAt(R*sin(tetta)*cos(fi),
+			  R*sin(tetta)*sin(fi),
+			  R*cos(tetta), 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
     
     glVertexPointer(2, GL_FLOAT, 0, _points);
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -216,27 +217,24 @@ void gluPerspective(double fovy, double aspect, double zNear, double zFar) {
 
 - (void)handelPanGesture:(UIPanGestureRecognizer *)gesture
 {
-	GLfloat dX = theEvent.deltaX;
-	GLfloat dY = theEvent.deltaY;
-	
-	GLfloat newTetta = LookAtTetta;
-	GLfloat newFi = LookAtFi;
-	if (dY > 0.0) newTetta -= ANGLE_STEP;
-	else if (dY < 0.0) newTetta += ANGLE_STEP;
-	if (dX > 0.0) newFi -= ANGLE_STEP;
-	else if (dX < 0.0) newFi += ANGLE_STEP;
-	
-	if (newTetta < 0.0 || newTetta > M_PI) return;
-	
-	LookAtTetta = newTetta;
-	LookAtFi = newFi;
-	
-	[self render];
+	if ((gesture.state == UIGestureRecognizerStateChanged) ||
+		gesture.state == UIGestureRecognizerStateEnded) {
+		CGPoint translation = [gesture translationInView:self];
+		GLfloat newTetta = tetta - translation.y;
+		GLfloat newFi = fi - translation.x;
+		tetta = newTetta;
+		fi = newFi;
+		[self render];
+	}
 }
 
 - (void)handelPinchGesture:(UIPinchGestureRecognizer *)gesture
 {
-    R -= gesture.scale;
+	if ((gesture.state == UIGestureRecognizerStateChanged) ||
+		gesture.state == UIGestureRecognizerStateEnded) {
+			R *= gesture.scale;
+			[self render];
+	}
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
