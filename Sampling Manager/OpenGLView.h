@@ -20,7 +20,7 @@
 }
 
 @property (nonatomic, assign) GLfloat *points;
-@property (nonatomic) GLuint arrayCount;
+@property (nonatomic, assign) GLuint arrayCount;
 
 - (void)render;
 - (BOOL)resizeFromLayer:(CAEAGLLayer *)layer;

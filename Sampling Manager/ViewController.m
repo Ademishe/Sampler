@@ -16,8 +16,8 @@
 
 @interface ViewController ()
 
-- (void)draw2DPlot;
-- (void)draw3DPlot;
+- (void)setPoints;
+- (void)draw;
 
 @end
 
@@ -93,11 +93,16 @@
         [self.toggleButton setTitle:@"Start sampling" forState:UIControlStateNormal];
         
         [accelManager stopAccelerometerUpdates];
-		[self draw2DPlot];
-        [self draw3DPlot];
+		[self setPoints];
+        [self draw];
     }
     else {
         isSampling = YES;
+		[self.plotter setArrayCount:0];
+		[self.plotter setPoints:NULL];
+		[self.plotter3D setArrayCount:0];
+		[self.plotter3D setPoints:NULL];
+		
         [self.toggleButton setTitle:@"Stop sampling" forState:UIControlStateNormal];
 		
 		free(self.arrayWithPoints);
@@ -136,18 +141,18 @@
 
 #pragma mark - Private Methods
 
-- (void)draw2DPlot
+- (void)setPoints
 {
-	[self.plotter setArrayCount:memoryCount];
-	[self.plotter setPoints:self.arrayWithPoints];
 	[self.plotter setNeedsDisplay];
+	[self.plotter3D render];
 }
 
-- (void)draw3DPlot
+- (void)draw
 {
-//    [self.plotter3D setArrayCount:memoryCount];
-//    [self.plotter3D setPoints:self.arrayWithPoints];
-    [self.plotter3D render];
+    [self.plotter3D setArrayCount:memoryCount];
+    [self.plotter3D setPoints:self.arrayWithPoints];
+	[self.plotter setArrayCount:memoryCount];
+	[self.plotter setPoints:self.arrayWithPoints];
 }
 
 @end
