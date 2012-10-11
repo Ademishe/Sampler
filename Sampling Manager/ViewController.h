@@ -12,7 +12,7 @@
 @class PlotView;
 @class OpenGLView;
 
-@interface ViewController : UIViewController {
+@interface ViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
     BOOL isSampling;
     CMMotionManager *accelManager;
     GLfloat accelX, accelY, accelZ;
@@ -25,5 +25,6 @@
 @property (readonly, assign, nonatomic) GLfloat *arrayWithPoints;
 
 - (IBAction)toggleSampling:(UIButton *)sender;
+- (IBAction)takePhoto:(id)sender;
 
 @end
