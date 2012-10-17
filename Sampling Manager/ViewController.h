@@ -13,10 +13,10 @@
 @class OpenGLView;
 
 @interface ViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
-    BOOL isSampling;
     CMMotionManager *accelManager;
     GLfloat accelX, accelY, accelZ;
 	unsigned int memoryCount;
+    UIImagePickerController *cameraUI;
 }
 
 @property (weak, nonatomic) IBOutlet PlotView *plotter;
@@ -24,7 +24,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *toggleButton;
 @property (readonly, assign, nonatomic) GLfloat *arrayWithPoints;
 
-- (IBAction)toggleSampling:(UIButton *)sender;
-- (IBAction)takePhoto:(id)sender;
+- (IBAction)takePhoto:(UIButton *)sender;
+- (IBAction)refreshViews:(UIButton *)sender;
+- (void)beginSamplingAndTakePhoto:(UIButton *)sender;
 
 @end

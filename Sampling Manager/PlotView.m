@@ -87,6 +87,7 @@
 	for (int i = 3; i < _arrayCount; i += 3) {
 		CGFloat X = _points[i]*self.scale;
 		CGFloat Y = _points[i+1]*self.scale;
+//        NSLog(@"x = %f y = %f count = %d", X, Y, _arrayCount);
 		
 		CGContextAddLineToPoint(ctx, X, Y);
 		CGContextStrokePath(ctx);
