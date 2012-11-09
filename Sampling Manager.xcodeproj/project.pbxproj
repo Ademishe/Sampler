@@ -63,6 +63,8 @@
 		7693A79516060F8C00BA22A0 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		7693A7971606112400BA22A0 /* OpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLView.h; sourceTree = "<group>"; };
 		7693A7981606112400BA22A0 /* OpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLView.m; sourceTree = "<group>"; };
+		76F1900216306F8600A8D38D /* libfftw3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfftw3.3.dylib; path = /opt/local/lib/libfftw3.3.dylib; sourceTree = "<absolute>"; };
+		76F1900416306FF900A8D38D /* fftw3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fftw3.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76F1900316306F8600A8D38D /* libfftw3.3.dylib in Frameworks */,
 				7693A79616060F8C00BA22A0 /* QuartzCore.framework in Frameworks */,
 				7693A79316060F8400BA22A0 /* OpenGLES.framework in Frameworks */,
 				7600CB7415FFC45C00BB08F0 /* CoreMotion.framework in Frameworks */,
@@ -114,6 +117,7 @@
 		7600CB3D15FFC0F900BB08F0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				76F1900216306F8600A8D38D /* libfftw3.3.dylib */,
 				7693A79516060F8C00BA22A0 /* QuartzCore.framework */,
 				7693A79216060F8400BA22A0 /* OpenGLES.framework */,
 				7600CB7315FFC45C00BB08F0 /* CoreMotion.framework */,
@@ -128,6 +132,7 @@
 		7600CB4415FFC0F900BB08F0 /* Sampling Manager */ = {
 			isa = PBXGroup;
 			children = (
+				76F1900416306FF900A8D38D /* fftw3.h */,
 				7600CB4D15FFC0F900BB08F0 /* AppDelegate.h */,
 				7600CB4E15FFC0F900BB08F0 /* AppDelegate.m */,
 				7600CB5015FFC0F900BB08F0 /* ViewController.h */,
@@ -387,6 +392,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Sampling Manager/Sampling Manager-Prefix.pch";
 				INFOPLIST_FILE = "Sampling Manager/Sampling Manager-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -398,6 +408,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Sampling Manager/Sampling Manager-Prefix.pch";
 				INFOPLIST_FILE = "Sampling Manager/Sampling Manager-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

@@ -10,6 +10,7 @@
 #import "PlotView.h"
 #import "OpenGLView.h"
 #import <QuartzCore/QuartzCore.h>
+#import "fftw3.h"
 
 #define kFilteringFactor 0.5
 #define OVERLAY_SIZE 0.1
