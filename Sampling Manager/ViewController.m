@@ -88,9 +88,9 @@
     [super viewDidUnload];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+- (NSInteger)supportedInterfaceOrientations
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 #pragma mark - Actions
@@ -145,13 +145,11 @@
 {
     [self.toggleButton setTitle:@"Start sampling" forState:UIControlStateNormal];
     [self setPoints];
-//    NSLog(@"count = %d", memoryCount);
-//    for (int i = 0; i < memoryCount; i += 3) {
-//        NSLog(@"x = %f y = %f", self.arrayWithPoints[i], self.arrayWithPoints[i+1]);
-//    }
-//    NSLog(@"%@", [info description]);
-    [self.imageView setImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
-    
+    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    CGPoint viewPlace = self.imageView.center;
+    [self.imageView setFrame:CGRectMake(0.0, 0.0, image.size.width*0.07, image.size.height*0.07)];
+    self.imageView.center = viewPlace;
+    [self.imageView setImage:image];
 //    UIImageWriteToSavedPhotosAlbum([info objectForKey:UIImagePickerControllerOriginalImage], nil, nil, nil);
 }
 
@@ -191,7 +189,7 @@
     };
     
     [accelManager startAccelerometerUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:handlerBlock];
-    [accelManager performSelector:@selector(stopAccelerometerUpdates) withObject:nil afterDelay:0.2];
+    [accelManager performSelector:@selector(stopAccelerometerUpdates) withObject:nil afterDelay:0.25];
     [cameraUI takePicture];
 }
 

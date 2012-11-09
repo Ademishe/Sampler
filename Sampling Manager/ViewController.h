@@ -20,8 +20,8 @@
 
 @property (weak, nonatomic) IBOutlet PlotView *plotter;
 @property (weak, nonatomic) IBOutlet UIButton *toggleButton;
-@property (readonly, assign, nonatomic) GLfloat *arrayWithPoints;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (readonly, assign, nonatomic) GLfloat *arrayWithPoints;
 
 - (IBAction)takePhoto:(UIButton *)sender;
 - (IBAction)refreshViews:(UIButton *)sender;
