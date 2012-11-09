@@ -24,6 +24,7 @@
 		763DEE52160077EA00CE8E3E /* PlotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 763DEE51160077EA00CE8E3E /* PlotView.m */; };
 		7693A79316060F8400BA22A0 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7693A79216060F8400BA22A0 /* OpenGLES.framework */; };
 		7693A79616060F8C00BA22A0 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7693A79516060F8C00BA22A0 /* QuartzCore.framework */; };
+		76A0F10E164D8FC200932FA8 /* libfftw3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 76F1900216306F8600A8D38D /* libfftw3.3.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				76F1900316306F8600A8D38D /* libfftw3.3.dylib in Frameworks */,
+				76A0F10E164D8FC200932FA8 /* libfftw3.3.dylib in Frameworks */,
 				7693A79616060F8C00BA22A0 /* QuartzCore.framework in Frameworks */,
 				7693A79316060F8400BA22A0 /* OpenGLES.framework in Frameworks */,
 				7600CB7415FFC45C00BB08F0 /* CoreMotion.framework in Frameworks */,
@@ -139,8 +140,7 @@
 				7600CB5115FFC0F900BB08F0 /* ViewController.m */,
 				763DEE50160077EA00CE8E3E /* PlotView.h */,
 				763DEE51160077EA00CE8E3E /* PlotView.m */,
-				7693A7971606112400BA22A0 /* OpenGLView.h */,
-				7693A7981606112400BA22A0 /* OpenGLView.m */,
+				76A0F10C164D8CA000932FA8 /* deprecated */,
 				7600CB5315FFC0F900BB08F0 /* ViewController.xib */,
 				7600CB4515FFC0F900BB08F0 /* Supporting Files */,
 			);
@@ -175,6 +175,15 @@
 				7600CB6515FFC0F900BB08F0 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		76A0F10C164D8CA000932FA8 /* deprecated */ = {
+			isa = PBXGroup;
+			children = (
+				7693A7971606112400BA22A0 /* OpenGLView.h */,
+				7693A7981606112400BA22A0 /* OpenGLView.m */,
+			);
+			name = deprecated;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

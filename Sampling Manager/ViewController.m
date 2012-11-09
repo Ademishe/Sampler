@@ -8,7 +8,6 @@
 
 #import "ViewController.h"
 #import "PlotView.h"
-#import "OpenGLView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "fftw3.h"
 
@@ -27,9 +26,9 @@
 @implementation ViewController
 
 @synthesize plotter = _plotter;
-@synthesize plotter3D = _plotter3D;
 @synthesize toggleButton = _toggleButton;
 @synthesize arrayWithPoints = _arrayWithPoints;
+@synthesize imageView = _imageView;
 
 - (void)viewDidLoad
 {
@@ -72,21 +71,6 @@
 	[pan setDelegate:self.plotter];
 	[pan setMaximumNumberOfTouches:2];
 	[self.plotter addGestureRecognizer:pan];
-    
-//    UIPinchGestureRecognizer *pinch3D = [[UIPinchGestureRecognizer alloc] initWithTarget:self.plotter3D action:@selector(handelPinchGesture:)];
-//	[pinch3D setDelegate:self.plotter3D];
-//	[self.plotter3D addGestureRecognizer:pinch3D];
-//	UIPanGestureRecognizer *pan3D = [[UIPanGestureRecognizer alloc] initWithTarget:self.plotter3D action:@selector(handelPanGesture:)];
-//	[pan3D setDelegate:self.plotter3D];
-//	[pan3D setMaximumNumberOfTouches:2];
-//	[self.plotter3D addGestureRecognizer:pan3D];
-//    
-//    CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.plotter3D.layer;
-//    
-//    eaglLayer.opaque = TRUE;
-//    eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:FALSE], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
-//    
-//    [self.plotter3D resizeFromLayer:eaglLayer];
 }
 
 - (void)viewDidUnload
@@ -100,6 +84,7 @@
 	free(self.arrayWithPoints);
 	_arrayWithPoints = NULL;
     
+    [self setImageView:nil];
     [super viewDidUnload];
 }
 
@@ -113,7 +98,6 @@
 - (IBAction)refreshViews:(UIButton *)sender
 {
     [self.plotter setNeedsDisplay];
-//	[self.plotter3D render];
 }
 
 - (IBAction)takePhoto:(id)sender
@@ -139,8 +123,6 @@
 
 - (void)setPoints
 {
-//	[self.plotter3D setArrayCount:memoryCount];
-//    [self.plotter3D setPoints:self.arrayWithPoints];
 	[self.plotter setArrayCount:memoryCount];
 	[self.plotter setPoints:self.arrayWithPoints];
 }
@@ -167,8 +149,10 @@
 //    for (int i = 0; i < memoryCount; i += 3) {
 //        NSLog(@"x = %f y = %f", self.arrayWithPoints[i], self.arrayWithPoints[i+1]);
 //    }
-    NSLog(@"%@", [info description]);
-    UIImageWriteToSavedPhotosAlbum([info objectForKey:UIImagePickerControllerOriginalImage], nil, nil, nil);
+//    NSLog(@"%@", [info description]);
+    [self.imageView setImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
+    
+//    UIImageWriteToSavedPhotosAlbum([info objectForKey:UIImagePickerControllerOriginalImage], nil, nil, nil);
 }
 
 
@@ -181,8 +165,6 @@
 {
     [self.plotter setArrayCount:0];
     [self.plotter setPoints:NULL];
-//    [self.plotter3D setArrayCount:0];
-//    [self.plotter3D setPoints:NULL];
     
     [self.toggleButton setTitle:@"Stop sampling" forState:UIControlStateNormal];
     [self prepareArray];

@@ -10,7 +10,6 @@
 #import <CoreMotion/CoreMotion.h>
 
 @class PlotView;
-@class OpenGLView;
 
 @interface ViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
     CMMotionManager *accelManager;
@@ -20,9 +19,9 @@
 }
 
 @property (weak, nonatomic) IBOutlet PlotView *plotter;
-@property (weak, nonatomic) IBOutlet OpenGLView *plotter3D;
 @property (weak, nonatomic) IBOutlet UIButton *toggleButton;
 @property (readonly, assign, nonatomic) GLfloat *arrayWithPoints;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 - (IBAction)takePhoto:(UIButton *)sender;
 - (IBAction)refreshViews:(UIButton *)sender;
