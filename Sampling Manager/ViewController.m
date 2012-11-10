@@ -10,7 +10,6 @@
 #import <CoreMotion/CoreMotion.h>
 #import "PlotView.h"
 #import "DeconvolutionTool.h"
-#import "fftw3.h"
 
 #define kFilteringFactor 0.5
 #define OVERLAY_SIZE 0.1
