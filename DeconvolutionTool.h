@@ -8,7 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@interface DeconvolutionTool : NSObject
+@interface DeconvolutionTool : NSObject {
+	CGFloat *_points;
+	int _cnt;
+	UIImage *originalImage;
+}
+
+@property (strong) UIImage *deconvoluatedImage;
+@property id delegate;
 
 - (DeconvolutionTool *)initWithArray:(CGFloat *)points arrayCount:(int)cnt andImage:(UIImage *)image;
 - (void)deconvoluateImage;
