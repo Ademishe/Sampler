@@ -7,12 +7,24 @@
 //
 
 #import "ViewController.h"
+#import <CoreMotion/CoreMotion.h>
 #import "PlotView.h"
-#import <QuartzCore/QuartzCore.h>
+#import "DeconvolutionTool.h"
 #import "fftw3.h"
 
 #define kFilteringFactor 0.5
 #define OVERLAY_SIZE 0.1
+
+UIImage *getPreviewImage(UIImage *image, double percent) {
+	UIGraphicsBeginImageContext(CGSizeMake(image.size.width*percent, image.size.height*percent));
+	
+	[image drawInRect: CGRectMake(0, 0, image.size.width*percent, image.size.height*percent)];
+	UIImage *smallImage = UIGraphicsGetImageFromCurrentImageContext();
+	
+	UIGraphicsEndImageContext();
+	
+	return smallImage;
+}
 
 @interface ViewController ()
 
@@ -77,7 +89,6 @@
 {
     [self setToggleButton:nil];
     [self setPlotter:nil];
-//	[self setPlotter3D:nil];
     
     accelManager = nil;
 	
@@ -100,7 +111,7 @@
     [self.plotter setNeedsDisplay];
 }
 
-- (IBAction)takePhoto:(id)sender
+- (IBAction)takePhoto:(UIButton *)sender
 {
 	[self startCameraControllerFromViewController:self usingDelegate:self];
 }
@@ -145,11 +156,16 @@
 {
     [self.toggleButton setTitle:@"Start sampling" forState:UIControlStateNormal];
     [self setPoints];
+	
     UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
     CGPoint viewPlace = self.imageView.center;
     [self.imageView setFrame:CGRectMake(0.0, 0.0, image.size.width*0.07, image.size.height*0.07)];
     self.imageView.center = viewPlace;
-    [self.imageView setImage:image];
+    [self.imageView setImage:getPreviewImage(image, 0.2)];
+	
+	DeconvolutionTool *tool = [[DeconvolutionTool alloc] initWithArray:self.arrayWithPoints arrayCount:memoryCount andImage:image];
+	[tool performSelectorInBackground:@selector(deconvoluateImage) withObject:nil];
+	
 //    UIImageWriteToSavedPhotosAlbum([info objectForKey:UIImagePickerControllerOriginalImage], nil, nil, nil);
 }
 

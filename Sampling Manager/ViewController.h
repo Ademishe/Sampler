@@ -7,13 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <CoreMotion/CoreMotion.h>
 
 @class PlotView;
+@class CMMotionManager;
+@protocol UIImagePickerControllerDelegate;
 
 @interface ViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
     CMMotionManager *accelManager;
-    GLfloat accelX, accelY, accelZ;
+    CGFloat accelX, accelY, accelZ;
 	unsigned int memoryCount;
     UIImagePickerController *cameraUI;
 }
@@ -21,7 +22,7 @@
 @property (weak, nonatomic) IBOutlet PlotView *plotter;
 @property (weak, nonatomic) IBOutlet UIButton *toggleButton;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
-@property (readonly, assign, nonatomic) GLfloat *arrayWithPoints;
+@property (readonly, assign, nonatomic) CGFloat *arrayWithPoints;
 
 - (IBAction)takePhoto:(UIButton *)sender;
 - (IBAction)refreshViews:(UIButton *)sender;
