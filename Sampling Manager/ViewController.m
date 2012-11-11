@@ -215,7 +215,7 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
 //    UIImageWriteToSavedPhotosAlbum([info objectForKey:UIImagePickerControllerOriginalImage], nil, nil, nil);
 }
 
-- (void)deconvolitonToolHasFinished:(UIImage *)resultImage
+- (void)deconvolitonTool:(DeconvolutionTool *)tool hasFinished:(UIImage *)resultImage
 {
 	[self.indicator stopAnimating];
 	CGPoint viewPlace = self.resultImageView.center;

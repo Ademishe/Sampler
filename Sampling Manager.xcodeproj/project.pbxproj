@@ -23,7 +23,7 @@
 		7600CB7415FFC45C00BB08F0 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7600CB7315FFC45C00BB08F0 /* CoreMotion.framework */; };
 		763DEE52160077EA00CE8E3E /* PlotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 763DEE51160077EA00CE8E3E /* PlotView.m */; };
 		76DB2B70164FB98D0089E57A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DB2B6F164FB98D0089E57A /* Default-568h@2x.png */; };
-		76DB2B79164FBC880089E57A /* libfftw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76DB2B78164FBC880089E57A /* libfftw3.a */; };
+		76DB2B7B164FD5980089E57A /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76DB2B7A164FD5980089E57A /* Accelerate.framework */; };
 		76EE39AE164EE4D20050E8FE /* DeconvolutionTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 76EE39AD164EE4D20050E8FE /* DeconvolutionTool.m */; };
 /* End PBXBuildFile section */
 
@@ -63,7 +63,7 @@
 		7693A7971606112400BA22A0 /* OpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLView.h; sourceTree = "<group>"; };
 		7693A7981606112400BA22A0 /* OpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLView.m; sourceTree = "<group>"; };
 		76DB2B6F164FB98D0089E57A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
-		76DB2B78164FBC880089E57A /* libfftw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfftw3.a; path = /opt/local/lib/libfftw3.a; sourceTree = "<absolute>"; };
+		76DB2B7A164FD5980089E57A /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		76EE39AC164EE4D20050E8FE /* DeconvolutionTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeconvolutionTool.h; path = ../DeconvolutionTool.h; sourceTree = "<group>"; };
 		76EE39AD164EE4D20050E8FE /* DeconvolutionTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeconvolutionTool.m; path = ../DeconvolutionTool.m; sourceTree = "<group>"; };
 		76F1900416306FF900A8D38D /* fftw3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fftw3.h; sourceTree = "<group>"; };
@@ -74,7 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				76DB2B79164FBC880089E57A /* libfftw3.a in Frameworks */,
+				76DB2B7B164FD5980089E57A /* Accelerate.framework in Frameworks */,
 				7600CB7415FFC45C00BB08F0 /* CoreMotion.framework in Frameworks */,
 				7600CB3F15FFC0F900BB08F0 /* UIKit.framework in Frameworks */,
 				7600CB4115FFC0F900BB08F0 /* Foundation.framework in Frameworks */,
@@ -117,7 +117,7 @@
 		7600CB3D15FFC0F900BB08F0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				76DB2B78164FBC880089E57A /* libfftw3.a */,
+				76DB2B7A164FD5980089E57A /* Accelerate.framework */,
 				7600CB7315FFC45C00BB08F0 /* CoreMotion.framework */,
 				7600CB3E15FFC0F900BB08F0 /* UIKit.framework */,
 				7600CB4015FFC0F900BB08F0 /* Foundation.framework */,
