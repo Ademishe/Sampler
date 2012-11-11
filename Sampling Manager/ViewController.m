@@ -9,7 +9,6 @@
 #import "ViewController.h"
 #import <CoreMotion/CoreMotion.h>
 #import "PlotView.h"
-#import "DeconvolutionTool.h"
 
 #define kFilteringFactor 0.5
 #define OVERLAY_SIZE 0.1
@@ -38,8 +37,9 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
 
 @synthesize plotter = _plotter;
 @synthesize toggleButton = _toggleButton;
-@synthesize arrayWithPoints = _arrayWithPoints;
 @synthesize imageView = _imageView;
+@synthesize resultImageView = _resultImageView;
+@synthesize indicator = _indicator;
 
 - (void)viewDidLoad
 {
@@ -67,6 +67,7 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
 	[cameraUI setCameraOverlayView:cameraOverlayView];
     
 	_arrayWithPoints = NULL;
+	_tool = nil;
     
     accelX = accelY = accelZ = 0.0;
     
@@ -88,13 +89,16 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
 {
     [self setToggleButton:nil];
     [self setPlotter:nil];
+	[self setImageView:nil];
+	[self setResultImageView:nil];
+	[self setIndicator:nil];
     
     accelManager = nil;
+	_tool = nil;
 	
-	free(self.arrayWithPoints);
+	free(_arrayWithPoints);
 	_arrayWithPoints = NULL;
-    
-    [self setImageView:nil];
+	
     [super viewDidUnload];
 }
 
@@ -115,63 +119,13 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
 	[self startCameraControllerFromViewController:self usingDelegate:self];
 }
 
-#pragma mark - Private Methods
-
-- (void)prepareArray
-{
-    free(_arrayWithPoints);
-	_arrayWithPoints = NULL;
-	_arrayWithPoints = (GLfloat *)malloc(3 * sizeof(GLfloat));
-	if (_arrayWithPoints == NULL) {
-		NSLog(@"Memory allocation error!");
-		return;
-	}
-	_arrayWithPoints[0] = _arrayWithPoints[1] = _arrayWithPoints[2] = 0.0f;
-	memoryCount = 3;
-}
-
-
-- (void)setPoints
-{
-	[self.plotter setArrayCount:memoryCount];
-	[self.plotter setPoints:self.arrayWithPoints];
-}
-
-- (BOOL)startCameraControllerFromViewController:(UIViewController*) controller
-								  usingDelegate:(id <UIImagePickerControllerDelegate, UINavigationControllerDelegate>) delegate
-{
-    if (([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] == NO) ||
-		(delegate == nil) ||
-		(controller == nil)) return NO;
-    
-    cameraUI.delegate = delegate;
-    [controller presentViewController:cameraUI animated:YES completion:nil];
-    return YES;
-}
-
-#pragma mark - Delegate Methods
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
-    [self.toggleButton setTitle:@"Start sampling" forState:UIControlStateNormal];
-    [self setPoints];
-	
-    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-    CGPoint viewPlace = self.imageView.center;
-    [self.imageView setFrame:CGRectMake(0.0, 0.0, image.size.width*0.07, image.size.height*0.07)];
-    self.imageView.center = viewPlace;
-    [self.imageView setImage:getPreviewImage(image, 0.2)];
-	
-	DeconvolutionTool *tool = [[DeconvolutionTool alloc] initWithArray:self.arrayWithPoints arrayCount:memoryCount andImage:image];
-	[tool performSelectorInBackground:@selector(deconvoluateImage) withObject:nil];
-	
-//    UIImageWriteToSavedPhotosAlbum([info objectForKey:UIImagePickerControllerOriginalImage], nil, nil, nil);
-}
-
-
 - (void)dismiss:(UIButton *)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+	if (_tool) {
+		[self.indicator startAnimating];
+		[_tool performSelectorInBackground:@selector(deconvoluateImage) withObject:nil];
+	}
 }
 
 - (void)beginSamplingAndTakePhoto:(UIButton *)sender
@@ -206,6 +160,68 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
     [accelManager startAccelerometerUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:handlerBlock];
     [accelManager performSelector:@selector(stopAccelerometerUpdates) withObject:nil afterDelay:0.25];
     [cameraUI takePicture];
+}
+
+#pragma mark - Private Methods
+
+- (void)prepareArray
+{
+    free(_arrayWithPoints);
+	_arrayWithPoints = NULL;
+	_arrayWithPoints = (GLfloat *)malloc(3 * sizeof(GLfloat));
+	if (_arrayWithPoints == NULL) {
+		NSLog(@"Memory allocation error!");
+		return;
+	}
+	_arrayWithPoints[0] = _arrayWithPoints[1] = _arrayWithPoints[2] = 0.0f;
+	memoryCount = 3;
+}
+
+
+- (void)setPoints
+{
+	[self.plotter setArrayCount:memoryCount];
+	[self.plotter setPoints:_arrayWithPoints];
+}
+
+- (BOOL)startCameraControllerFromViewController:(UIViewController*)controller
+								  usingDelegate:(id <UIImagePickerControllerDelegate, UINavigationControllerDelegate>)delegate
+{
+    if (([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera] == NO) ||
+		(delegate == nil) ||
+		(controller == nil)) return NO;
+    
+    cameraUI.delegate = delegate;
+    [controller presentViewController:cameraUI animated:YES completion:nil];
+    return YES;
+}
+
+#pragma mark - Delegate Methods
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    [self.toggleButton setTitle:@"Start sampling" forState:UIControlStateNormal];
+    [self setPoints];
+	
+	_tool = [[DeconvolutionTool alloc] initWithArray:_arrayWithPoints arrayCount:memoryCount andImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
+	
+    CGPoint viewPlace = self.imageView.center;
+    [self.imageView setFrame:CGRectMake(0.0, 0.0, _tool.originalImage.size.width*0.07, _tool.originalImage.size.height*0.07)];
+    self.imageView.center = viewPlace;
+    [self.imageView setImage:getPreviewImage(_tool.originalImage, 0.2)];
+	
+	[self.resultImageView setImage:nil];
+	
+//    UIImageWriteToSavedPhotosAlbum([info objectForKey:UIImagePickerControllerOriginalImage], nil, nil, nil);
+}
+
+- (void)deconvolitonToolHasFinished:(UIImage *)resultImage
+{
+	[self.indicator stopAnimating];
+	CGPoint viewPlace = self.resultImageView.center;
+	[self.resultImageView setFrame:CGRectMake(0.0, 0.0, resultImage.size.width*0.07, resultImage.size.width*0.7)];
+	self.resultImageView.center = viewPlace;
+	[self.resultImageView setImage:getPreviewImage(resultImage, 0.07)];
 }
 
 @end

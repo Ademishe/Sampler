@@ -10,4 +10,18 @@
 
 @implementation DeconvolutionTool
 
+@synthesize originalImage;
+@synthesize resultImage = _resultImage;
+@synthesize delegate = _delegate;
+
+- (DeconvolutionTool *)initWithArray:(CGFloat *)points arrayCount:(int)cnt andImage:(UIImage *)image
+{
+	return self;
+}
+
+- (void)deconvoluateImage
+{
+	
+}
+
 @end

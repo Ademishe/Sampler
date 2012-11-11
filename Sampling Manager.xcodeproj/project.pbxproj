@@ -22,7 +22,6 @@
 		7600CB6A15FFC0F900BB08F0 /* Sampling_ManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7600CB6915FFC0F900BB08F0 /* Sampling_ManagerTests.m */; };
 		7600CB7415FFC45C00BB08F0 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7600CB7315FFC45C00BB08F0 /* CoreMotion.framework */; };
 		763DEE52160077EA00CE8E3E /* PlotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 763DEE51160077EA00CE8E3E /* PlotView.m */; };
-		76A0F10E164D8FC200932FA8 /* libfftw3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 76F1900216306F8600A8D38D /* libfftw3.3.dylib */; };
 		76EE39AE164EE4D20050E8FE /* DeconvolutionTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 76EE39AD164EE4D20050E8FE /* DeconvolutionTool.m */; };
 /* End PBXBuildFile section */
 
@@ -63,7 +62,6 @@
 		7693A7981606112400BA22A0 /* OpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLView.m; sourceTree = "<group>"; };
 		76EE39AC164EE4D20050E8FE /* DeconvolutionTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeconvolutionTool.h; path = ../DeconvolutionTool.h; sourceTree = "<group>"; };
 		76EE39AD164EE4D20050E8FE /* DeconvolutionTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeconvolutionTool.m; path = ../DeconvolutionTool.m; sourceTree = "<group>"; };
-		76F1900216306F8600A8D38D /* libfftw3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfftw3.3.dylib; path = /opt/local/lib/libfftw3.3.dylib; sourceTree = "<absolute>"; };
 		76F1900416306FF900A8D38D /* fftw3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fftw3.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,7 +70,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				76A0F10E164D8FC200932FA8 /* libfftw3.3.dylib in Frameworks */,
 				7600CB7415FFC45C00BB08F0 /* CoreMotion.framework in Frameworks */,
 				7600CB3F15FFC0F900BB08F0 /* UIKit.framework in Frameworks */,
 				7600CB4115FFC0F900BB08F0 /* Foundation.framework in Frameworks */,
@@ -115,7 +112,6 @@
 		7600CB3D15FFC0F900BB08F0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				76F1900216306F8600A8D38D /* libfftw3.3.dylib */,
 				7600CB7315FFC45C00BB08F0 /* CoreMotion.framework */,
 				7600CB3E15FFC0F900BB08F0 /* UIKit.framework */,
 				7600CB4015FFC0F900BB08F0 /* Foundation.framework */,

@@ -7,22 +7,25 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DeconvolutionTool.h"
 
 @class PlotView;
 @class CMMotionManager;
-@protocol UIImagePickerControllerDelegate;
 
-@interface ViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
+@interface ViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, DeconvolutionToolDelegate> {
     CMMotionManager *accelManager;
     CGFloat accelX, accelY, accelZ;
 	unsigned int memoryCount;
     UIImagePickerController *cameraUI;
+	CGFloat *_arrayWithPoints;
+	DeconvolutionTool *_tool;
 }
 
 @property (weak, nonatomic) IBOutlet PlotView *plotter;
 @property (weak, nonatomic) IBOutlet UIButton *toggleButton;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
-@property (readonly, assign, nonatomic) CGFloat *arrayWithPoints;
+@property (weak) IBOutlet UIImageView *resultImageView;
+@property (weak) IBOutlet UIActivityIndicatorView *indicator;
 
 - (IBAction)takePhoto:(UIButton *)sender;
 - (IBAction)refreshViews:(UIButton *)sender;
