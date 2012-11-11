@@ -25,6 +25,7 @@
 
 @end
 
+
 @protocol DeconvolutionToolDelegate <NSObject>
 
 - (void)deconvolitonToolHasFinished:(UIImage *)resultImage;
