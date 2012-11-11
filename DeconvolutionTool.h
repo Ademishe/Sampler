@@ -8,11 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+typedef struct _DirectionVector {
+    double angle;
+    double length;
+} DirectionVector;
+
 @protocol DeconvolutionToolDelegate;
 
 @interface DeconvolutionTool : NSObject {
 	CGFloat *_points;
 	int _cnt;
+    DirectionVector vector;
 }
 
 @property (readonly, strong) UIImage *originalImage;

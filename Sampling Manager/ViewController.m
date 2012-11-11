@@ -85,7 +85,7 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
 	[self.plotter addGestureRecognizer:pan];
 }
 
-- (void)viewDidUnload
+- (void)dealloc
 {
     [self setToggleButton:nil];
     [self setPlotter:nil];
@@ -141,7 +141,7 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
         accelY = accelerometerData.acceleration.y - ( (accelerometerData.acceleration.y * kFilteringFactor) + (accelY * (1.0 - kFilteringFactor)) );
         accelZ = accelerometerData.acceleration.z - ( (accelerometerData.acceleration.z * kFilteringFactor) + (accelZ * (1.0 - kFilteringFactor)) );
         
-        GLfloat *tempArray = (GLfloat *)realloc(_arrayWithPoints, (memoryCount + 3) * sizeof(GLfloat));
+        CGFloat *tempArray = (CGFloat *)realloc(_arrayWithPoints, (memoryCount + 3) * sizeof(CGFloat));
         if (tempArray == NULL) {
             NSLog(@"Memory error!");
             return;
@@ -149,16 +149,18 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
         _arrayWithPoints = tempArray;
         memoryCount += 3;
         
-        GLfloat oldX = _arrayWithPoints[memoryCount - 6];
-        GLfloat oldY = _arrayWithPoints[memoryCount - 5];
-        GLfloat oldZ = _arrayWithPoints[memoryCount - 4];
+        CGFloat oldX = _arrayWithPoints[memoryCount - 6];
+        CGFloat oldY = _arrayWithPoints[memoryCount - 5];
+        CGFloat oldZ = _arrayWithPoints[memoryCount - 4];
         _arrayWithPoints[memoryCount - 3] = oldX + accelX;
         _arrayWithPoints[memoryCount - 2] = oldY - accelY;
         _arrayWithPoints[memoryCount - 1] = oldZ + accelZ;
     };
     
+//    NSArray *arguments = [NSArray arrayWithObjects:[NSOperationQueue mainQueue], handlerBlock, nil];
+    [accelManager performSelector:@selector(stopAccelerometerUpdates) withObject:nil afterDelay:0.20];
+//    [accelManager performSelector:@selector(startAccelerometerUpdatesToQueue:withHandler:) withObject:arguments afterDelay:0.1];
     [accelManager startAccelerometerUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:handlerBlock];
-    [accelManager performSelector:@selector(stopAccelerometerUpdates) withObject:nil afterDelay:0.25];
     [cameraUI takePicture];
 }
 
@@ -168,7 +170,7 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
 {
     free(_arrayWithPoints);
 	_arrayWithPoints = NULL;
-	_arrayWithPoints = (GLfloat *)malloc(3 * sizeof(GLfloat));
+	_arrayWithPoints = (CGFloat *)malloc(3 * sizeof(CGFloat));
 	if (_arrayWithPoints == NULL) {
 		NSLog(@"Memory allocation error!");
 		return;

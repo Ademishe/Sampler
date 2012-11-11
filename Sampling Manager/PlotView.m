@@ -74,16 +74,17 @@
     if (self.arrayCount == 0) return;
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 	CGContextSetRGBStrokeColor(ctx, 0.0, 0.5, 1.0, 1.0);
-	CGContextSetRGBFillColor(ctx, 0.0, 0.5, 1.0, 1.0);
 	CGContextSetLineWidth(ctx, 2.0);
 	
 	CGFloat zeroX = _points[0]*self.scale;
 	CGFloat zeroY = _points[1]*self.scale;
 	
+    CGContextSetRGBFillColor(ctx, 1.0, 0.0, 0.0, 1.0);
 	CGContextFillEllipseInRect(ctx, CGRectMake(zeroX - POINT_SIZE / 2.0, zeroY - POINT_SIZE / 2.0, POINT_SIZE, POINT_SIZE));
 	CGContextBeginPath(ctx);
 	CGContextMoveToPoint(ctx, zeroX, zeroY);
 	
+    CGContextSetRGBFillColor(ctx, 0.0, 0.5, 1.0, 1.0);
 	for (int i = 3; i < _arrayCount; i += 3) {
 		CGFloat X = _points[i]*self.scale;
 		CGFloat Y = _points[i+1]*self.scale;
