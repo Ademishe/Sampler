@@ -12,6 +12,7 @@
 
 #define kFilteringFactor 0.5
 #define OVERLAY_SIZE 0.1
+#define DIMENSIONS_NUM 3
 
 UIImage *getPreviewImage(UIImage *image, double percent) {
 	UIGraphicsBeginImageContext(CGSizeMake(image.size.width*percent, image.size.height*percent));
@@ -36,7 +37,6 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
 @implementation ViewController
 
 @synthesize plotter = _plotter;
-@synthesize toggleButton = _toggleButton;
 @synthesize imageView = _imageView;
 @synthesize resultImageView = _resultImageView;
 @synthesize indicator = _indicator;
@@ -87,7 +87,6 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
 
 - (void)dealloc
 {
-    [self setToggleButton:nil];
     [self setPlotter:nil];
 	[self setImageView:nil];
 	[self setResultImageView:nil];
@@ -100,6 +99,15 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
 	_arrayWithPoints = NULL;
 	
     [super viewDidUnload];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                    message:@"Something is bad... Not enough memory:("
+                                                   delegate:nil cancelButtonTitle:@"Ok, I'll close the app"
+                                          otherButtonTitles:nil];
+    [alert show];
 }
 
 - (NSInteger)supportedInterfaceOrientations
@@ -133,7 +141,6 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
     [self.plotter setArrayCount:0];
     [self.plotter setPoints:NULL];
     
-    [self.toggleButton setTitle:@"Stop sampling" forState:UIControlStateNormal];
     [self prepareArray];
     
     void (^handlerBlock)(CMAccelerometerData *, NSError *) = ^(CMAccelerometerData *accelerometerData, NSError *error) {
@@ -141,13 +148,13 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
         accelY = accelerometerData.acceleration.y - ( (accelerometerData.acceleration.y * kFilteringFactor) + (accelY * (1.0 - kFilteringFactor)) );
         accelZ = accelerometerData.acceleration.z - ( (accelerometerData.acceleration.z * kFilteringFactor) + (accelZ * (1.0 - kFilteringFactor)) );
         
-        CGFloat *tempArray = (CGFloat *)realloc(_arrayWithPoints, (memoryCount + 3) * sizeof(CGFloat));
+        CGFloat *tempArray = (CGFloat *)realloc(_arrayWithPoints, (memoryCount + DIMENSIONS_NUM) * sizeof(CGFloat));
         if (tempArray == NULL) {
             NSLog(@"Memory error!");
             return;
         }
         _arrayWithPoints = tempArray;
-        memoryCount += 3;
+        memoryCount += DIMENSIONS_NUM;
         
         CGFloat oldX = _arrayWithPoints[memoryCount - 6];
         CGFloat oldY = _arrayWithPoints[memoryCount - 5];
@@ -170,13 +177,13 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
 {
     free(_arrayWithPoints);
 	_arrayWithPoints = NULL;
-	_arrayWithPoints = (CGFloat *)malloc(3 * sizeof(CGFloat));
+	_arrayWithPoints = (CGFloat *)malloc(DIMENSIONS_NUM * sizeof(CGFloat));
 	if (_arrayWithPoints == NULL) {
 		NSLog(@"Memory allocation error!");
 		return;
 	}
 	_arrayWithPoints[0] = _arrayWithPoints[1] = _arrayWithPoints[2] = 0.0f;
-	memoryCount = 3;
+	memoryCount = DIMENSIONS_NUM;
 }
 
 
@@ -202,10 +209,9 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    [self.toggleButton setTitle:@"Start sampling" forState:UIControlStateNormal];
     [self setPoints];
 	
-	_tool = [[DeconvolutionTool alloc] initWithArray:_arrayWithPoints arrayCount:memoryCount andImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
+	_tool = [[DeconvolutionTool alloc] initWithArray:_arrayWithPoints arrayCount:memoryCount andImage:[[info objectForKey:UIImagePickerControllerOriginalImage] copy]];
 	[_tool setDelegate:self];
 	
     CGPoint viewPlace = self.imageView.center;

@@ -18,7 +18,8 @@ typedef struct _DirectionVector {
 @interface DeconvolutionTool : NSObject {
 	CGFloat *_points;
 	int _cnt;
-    DirectionVector vector;
+    DirectionVector _vector;
+    CGImageRef _kernelImage;
 }
 
 @property (readonly, strong) UIImage *originalImage;

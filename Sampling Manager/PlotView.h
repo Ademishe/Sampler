@@ -11,7 +11,7 @@
 @interface PlotView : UIView <UIGestureRecognizerDelegate>
 
 @property (nonatomic) CGFloat scale;
-@property (nonatomic, assign) CGFloat *points;
+@property (nonatomic) CGFloat *points;
 @property (nonatomic) GLuint arrayCount;
 
 - (void)pinch:(UIPinchGestureRecognizer *)gesture;

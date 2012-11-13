@@ -14,6 +14,7 @@
 @interface DeconvolutionTool ()
 
 - (void)findDiraction;
+- (CGFloat *)buildKernelImage;
 
 @end
 
@@ -31,10 +32,15 @@
     if (self) {
         _cnt = cnt;
         _originalImage = image;
-        vector.x = 0.0;
-        vector.y = 0.0;
+        _vector.x = 0.0;
+        _vector.y = 0.0;
+        _kernelImage = NULL;
         
         _points = (CGFloat *)malloc(_cnt * sizeof(CGFloat));
+        if (_points == NULL) {
+            NSLog(@"Memory allocation error!");
+            return nil;
+        }
         for (int i = 0; i < _cnt; i++) {
             _points[i] = points[i];
         }
@@ -48,7 +54,13 @@
 	//1)determine direction of the motion
     //by finding deriative of the array with points
     [self findDiraction];
-	//temporary plug
+    
+    //2)get kernel image pixel information of motion curve
+    CGFloat *kernelImagePixelInfo = [self buildKernelImage];
+    free(kernelImagePixelInfo);
+    kernelImagePixelInfo = NULL;
+    
+	//temporary plug for result image
 	_resultImage = nil;
 	[self.delegate deconvolitonTool:self hasFinished:self.resultImage];
 }
@@ -68,19 +80,61 @@
         x = _points[i];
         y = _points[i+1];
 //        z = _points[i+2];
-		NSLog(@"x = %lf y = %lf", x, y);
+//		NSLog(@"x = %lf y = %lf", x, y);
         
-        vector.x += (x - tempX);
-        vector.y += (y - tempY);
+        _vector.x += (x - tempX);
+        _vector.y += (y - tempY);
     }
-//	NSLog(@"angle = %lf length = %lf", atan(vector.y/vector.x), sqrt(pow(vector.x, 2) + pow(vector.y, 2)));
-	NSLog(@"result: x = %lf y = %lf", vector.x, vector.y);
+//	NSLog(@"angle = %lf length = %lf", atan(_vector.y/_vector.x), sqrt(pow(_vector.x, 2) + pow(_vector.y, 2)));
+//	NSLog(@"result: x = %lf y = %lf", _vector.x, _vector.y);
+}
+
+- (CGFloat *)buildKernelImage
+{
+    CGFloat motionLength = sqrtf(powf(_vector.x, 2) + powf(_vector.y, 2));
+    CGFloat motionAngle;
+    if (_vector.x > 0.0f && _vector.y > 0.0f) motionAngle = atanf(_vector.y/_vector.x);
+    else if (_vector.x < 0.0f && _vector.y > 0.0f) motionAngle = M_PI - atanf(_vector.y/_vector.x);
+    else if (_vector.x < 0.0f && _vector.y < 0.0f) motionAngle = M_PI + atanf(_vector.y/_vector.x);
+    else if (_vector.x > 0.0f && _vector.y < 0.0f) motionAngle = 2 * M_PI - atanf(_vector.y/_vector.x);
+    else motionAngle = 0.0f;
+    
+    int size = (int)motionLength + 6;
+    size += size%2;
+    double center = 0.5 + size / 2;
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    unsigned char *rawData = (unsigned char *)calloc(size * size, sizeof(unsigned char));
+    CGContextRef context = CGBitmapContextCreate(rawData, size, size, 8, size, colorSpace, kCGImageAlphaNone);
+    CGContextSetFillColor(context, CGColorGetComponents([[UIColor blackColor] CGColor]));
+    CGContextSetStrokeColor(context, CGColorGetComponents([[UIColor whiteColor] CGColor]));
+    CGContextSetLineWidth(context, 1.01);
+    
+    CGContextFillRect(context, CGRectMake(0.0, 0.0, size, size));
+    
+    CGContextMoveToPoint(context, center - motionLength*cos(motionAngle)/2, center - motionLength*sin(motionAngle)/2);
+    CGContextAddLineToPoint(context, center + motionLength*cos(motionAngle)/2, center + motionLength*sin(motionAngle)/2);
+    
+    CGContextStrokePath(context);
+    
+    CGColorSpaceRelease(colorSpace);
+    CGContextRelease(context);
+    
+    CGFloat *pixelInfo = (CGFloat *)malloc(size * size * sizeof(CGFloat));
+    for (int i = 0; i < size * size; i++) {
+        pixelInfo[i] = rawData[i] / 255.0;
+    }
+    
+    free(rawData);
+    rawData = NULL;
+    return pixelInfo;
 }
 
 #pragma mark - Lifecycle methods
 
 - (void)dealloc
 {
+    NSLog(@"tool deallocated!");
     free(_points);
     _points = NULL;
     

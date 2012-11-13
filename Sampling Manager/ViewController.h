@@ -22,7 +22,6 @@
 }
 
 @property (weak, nonatomic) IBOutlet PlotView *plotter;
-@property (weak, nonatomic) IBOutlet UIButton *toggleButton;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak) IBOutlet UIImageView *resultImageView;
 @property (weak) IBOutlet UIActivityIndicatorView *indicator;
