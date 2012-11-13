@@ -206,6 +206,7 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
     [self setPoints];
 	
 	_tool = [[DeconvolutionTool alloc] initWithArray:_arrayWithPoints arrayCount:memoryCount andImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
+	[_tool setDelegate:self];
 	
     CGPoint viewPlace = self.imageView.center;
     [self.imageView setFrame:CGRectMake(0.0, 0.0, _tool.originalImage.size.width*0.07, _tool.originalImage.size.height*0.07)];

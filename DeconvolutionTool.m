@@ -31,8 +31,8 @@
     if (self) {
         _cnt = cnt;
         _originalImage = image;
-        vector.angle = 0.0;
-        vector.length = 0.0;
+        vector.x = 0.0;
+        vector.y = 0.0;
         
         _points = (CGFloat *)malloc(_cnt * sizeof(CGFloat));
         for (int i = 0; i < _cnt; i++) {
@@ -48,6 +48,9 @@
 	//1)determine direction of the motion
     //by finding deriative of the array with points
     [self findDiraction];
+	//temporary plug
+	_resultImage = nil;
+	[self.delegate deconvolitonTool:self hasFinished:self.resultImage];
 }
 
 #pragma mark - Private methods
@@ -57,19 +60,21 @@
     CGFloat x = _points[0];
     CGFloat y = _points[1];
 //    CGFloat z = _points[2];
+	
     CGFloat tempX, tempY;
     for (int i = 3; i < _cnt; i+=DIMENSIONS_NUM) {
+		tempX = x;
+        tempY = y;
         x = _points[i];
         y = _points[i+1];
 //        z = _points[i+2];
+		NSLog(@"x = %lf y = %lf", x, y);
         
-        tempX = x;
-        tempY = y;
-        x -= tempX;
-        y -= tempY;
-        vector.length = sqrt(pow(x, 2) + pow(y, 2));
-        vector.angle = atan(y/x);
+        vector.x += (x - tempX);
+        vector.y += (y - tempY);
     }
+//	NSLog(@"angle = %lf length = %lf", atan(vector.y/vector.x), sqrt(pow(vector.x, 2) + pow(vector.y, 2)));
+	NSLog(@"result: x = %lf y = %lf", vector.x, vector.y);
 }
 
 #pragma mark - Lifecycle methods

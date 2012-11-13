@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 
 typedef struct _DirectionVector {
-    double angle;
-    double length;
+    CGFloat x;
+    CGFloat y;
 } DirectionVector;
 
 @protocol DeconvolutionToolDelegate;
