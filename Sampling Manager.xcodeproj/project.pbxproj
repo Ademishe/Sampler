@@ -64,8 +64,8 @@
 		7693A7981606112400BA22A0 /* OpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLView.m; sourceTree = "<group>"; };
 		76DB2B6F164FB98D0089E57A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		76DB2B7A164FD5980089E57A /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
-		76EE39AC164EE4D20050E8FE /* DeconvolutionTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeconvolutionTool.h; path = ../DeconvolutionTool.h; sourceTree = "<group>"; };
-		76EE39AD164EE4D20050E8FE /* DeconvolutionTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeconvolutionTool.m; path = ../DeconvolutionTool.m; sourceTree = "<group>"; };
+		76EE39AC164EE4D20050E8FE /* DeconvolutionTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeconvolutionTool.h; sourceTree = "<group>"; };
+		76EE39AD164EE4D20050E8FE /* DeconvolutionTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeconvolutionTool.m; sourceTree = "<group>"; };
 		76F1900416306FF900A8D38D /* fftw3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fftw3.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -418,10 +418,12 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Sampling Manager/Sampling Manager-Prefix.pch";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Sampling Manager/Sampling Manager-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/local/lib,
+					"\"$(SDKROOT)/usr/lib/system\"",
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -434,10 +436,12 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Sampling Manager/Sampling Manager-Prefix.pch";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Sampling Manager/Sampling Manager-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/local/lib,
+					"\"$(SDKROOT)/usr/lib/system\"",
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
