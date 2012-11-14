@@ -19,7 +19,9 @@ typedef struct _DirectionVector {
 	CGFloat *_points;
 	int _cnt;
     DirectionVector _vector;
-    CGImageRef _kernelImage;
+    CGFloat *_pixelInfoOfKernelImage;
+    int width;
+    int height;
 }
 
 @property (readonly, strong) UIImage *originalImage;
