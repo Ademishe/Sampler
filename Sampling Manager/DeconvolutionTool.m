@@ -12,10 +12,16 @@
 #define DIMENSIONS_NUM 3
 #define Length_Factor 1.0
 
+typedef enum {
+	RED, GREEN, BLUE
+} CurrentChannel;
+
 @interface DeconvolutionTool ()
 
 - (void)findDiraction;
 - (void)buildKernelImage;
+- (void)doDeconvoluateForChannel:(CurrentChannel)channel;
+- (void)prepareForFFT;
 
 @end
 
@@ -63,6 +69,9 @@
     
     //3)now we should do deconvolition process for red, green and blue channels
     //of original image
+	[self doDeconvoluateForChannel:RED];
+	[self doDeconvoluateForChannel:GREEN];
+	[self doDeconvoluateForChannel:BLUE];
     
 	//temporary plug for result image
 	_resultImage = nil;
@@ -132,6 +141,26 @@
     
     free(rawData);
     rawData = NULL;
+}
+
+- (void)doDeconvoluateForChannel:(CurrentChannel)channel
+{
+	switch (channel) {
+		case RED:
+			break;
+		case GREEN:
+			break;
+		case BLUE:
+			break;
+		default:
+			NSLog(@"Hmm.. Something is wrong, this channel does not exist.");
+			break;
+	}
+}
+
+- (void)prepareForFFT
+{
+	//here i should prepare setups for vDSP FFT functions
 }
 
 #pragma mark - Lifecycle methods
