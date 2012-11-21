@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <Accelerate/Accelerate.h>
 
 typedef struct _DirectionVector {
     CGFloat x;
@@ -22,8 +23,15 @@ typedef struct _DirectionVector {
     DirectionVector _vector;
 	
     CGFloat *_pixelInfoOfKernelImage;
+    
+    CGFloat *_redChannel;
+    CGFloat *_greenChannel;
+    CGFloat *_blueChannel;
+    
     int width;
     int height;
+    
+    FFTSetup fftsetup;
 }
 
 @property (readonly, strong) UIImage *originalImage;

@@ -7,7 +7,6 @@
 //
 
 #import "DeconvolutionTool.h"
-#import <Accelerate/Accelerate.h>
 
 #define DIMENSIONS_NUM 3
 #define Length_Factor 1.0
@@ -16,12 +15,14 @@ typedef enum {
 	RED, GREEN, BLUE
 } CurrentChannel;
 
+
 @interface DeconvolutionTool ()
 
 - (void)findDiraction;
 - (void)buildKernelImage;
-- (void)doDeconvoluateForChannel:(CurrentChannel)channel;
+- (CGFloat *)doDeconvoluateForChannel:(CurrentChannel)channel;
 - (void)prepareForFFT;
+- (void)getPixelInfoOfSourceImage;
 
 @end
 
@@ -42,6 +43,7 @@ typedef enum {
         _vector.x = 0.0;
         _vector.y = 0.0;
         _pixelInfoOfKernelImage = NULL;
+        _redChannel = _greenChannel = _blueChannel = NULL;
         width = _originalImage.size.width;
         height = _originalImage.size.height;
         
@@ -64,18 +66,28 @@ typedef enum {
     //by finding deriative of the array with points
     [self findDiraction];
     
-    //2)get kernel image pixel information of motion curve
+    //2)get kernel image pixel information of motion curve and source image
     [self buildKernelImage];
+    [self getPixelInfoOfSourceImage];
     
     //3)now we should do deconvolition process for red, green and blue channels
-    //of original image
-	[self doDeconvoluateForChannel:RED];
-	[self doDeconvoluateForChannel:GREEN];
-	[self doDeconvoluateForChannel:BLUE];
+    //of original image. this method returns pointer to array with result.
+    //spicing of these array will be the net step.
+    [self prepareForFFT];
+	CGFloat *resultOfRedChannel = [self doDeconvoluateForChannel:RED];
+	CGFloat *resultOfGreenChannel = [self doDeconvoluateForChannel:GREEN];
+	CGFloat *resultOfBlueChannel = [self doDeconvoluateForChannel:BLUE];
     
 	//temporary plug for result image
 	_resultImage = nil;
-	[self.delegate deconvolitonTool:self hasFinished:self.resultImage];
+    
+    free(resultOfRedChannel);
+    free(resultOfGreenChannel);
+    free(resultOfBlueChannel);
+    vDSP_destroy_fftsetup(fftsetup);
+    if ([self.delegate respondsToSelector:@selector(deconvolitonTool:hasFinished:)]) {
+        [self.delegate deconvolitonTool:self hasFinished:self.resultImage];
+    }
 }
 
 #pragma mark - Private methods
@@ -143,33 +155,81 @@ typedef enum {
     rawData = NULL;
 }
 
-- (void)doDeconvoluateForChannel:(CurrentChannel)channel
+- (CGFloat *)doDeconvoluateForChannel:(CurrentChannel)channel
 {
+    CGFloat *resultArray = NULL;
+    CGFloat **pointerToWorkingChannel = NULL;
 	switch (channel) {
 		case RED:
+            pointerToWorkingChannel = &_redChannel;
 			break;
 		case GREEN:
+            pointerToWorkingChannel = &_greenChannel;
 			break;
 		case BLUE:
+            pointerToWorkingChannel = &_blueChannel;
 			break;
 		default:
 			NSLog(@"Hmm.. Something is wrong, this channel does not exist.");
 			break;
 	}
+    CGFloat *workingChannel = *pointerToWorkingChannel;
+    
+    
+    
+    free(*pointerToWorkingChannel);
+    *pointerToWorkingChannel = NULL;
+    return resultArray;
 }
 
 - (void)prepareForFFT
 {
-	//here i should prepare setups for vDSP FFT functions
+    int log2W = log2(width) + 1;
+    int log2H = log2(height) + 1;
+    fftsetup = vDSP_create_fftsetup(MAX(log2W, log2H), kFFTRadix2);
+}
+
+- (void)getPixelInfoOfSourceImage
+{
+    CGImageRef imageRef = [self.originalImage CGImage];
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    unsigned char *rawData = (unsigned char *)calloc(height * width * 4, sizeof(unsigned char));
+    NSUInteger bytesPerPixel = 4;
+    NSUInteger bytesPerRow = bytesPerPixel * width;
+    NSUInteger bitsPerComponent = 8;
+    CGContextRef context = CGBitmapContextCreate(rawData, width, height, bitsPerComponent, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGColorSpaceRelease(colorSpace);
+    
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
+    CGContextRelease(context);
+    
+    int N = width*height;
+    _redChannel = (CGFloat *)malloc(width * height * sizeof(CGFloat));
+    _greenChannel = (CGFloat *)malloc(width * height * sizeof(CGFloat));
+    _blueChannel = (CGFloat *)malloc(width * height * sizeof(CGFloat));
+    
+    int j = 0;
+    for (int i = 0; i < N; i++) {
+        _redChannel[i] = (rawData[j] * 1.0) / 255.0;
+        _greenChannel[i] = (rawData[j+1] * 1.0) / 255.0;
+        _blueChannel[i] = (rawData[j+2] * 1.0) / 255.0;
+        j += 4;
+    }
+    
+    free(rawData);
 }
 
 #pragma mark - Lifecycle methods
 
 - (void)dealloc
 {
-//    NSLog(@"tool deallocated!");
     free(_points);
     _points = NULL;
+    
+    free(_redChannel);
+    free(_greenChannel);
+    free(_blueChannel);
+    _redChannel = _greenChannel = _blueChannel = NULL;
     
     free(_pixelInfoOfKernelImage);
     _pixelInfoOfKernelImage = NULL;
