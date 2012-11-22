@@ -167,7 +167,7 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
     [self dismissViewControllerAnimated:YES completion:nil];
 	if (_tool) {
 		[self.indicator startAnimating];
-		[_tool performSelectorInBackground:@selector(deconvoluateImage) withObject:nil];
+//		[_tool performSelectorInBackground:@selector(deconvoluateImage) withObject:nil];
 	}
 }
 
@@ -245,7 +245,8 @@ UIImage *getPreviewImage(UIImage *image, double percent) {
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     [self setPoints];
-	
+//    NSLog(@"%@", [info description]);
+    //2592x1936 - image size
 	_tool = [[DeconvolutionTool alloc] initWithArray:_arrayWithPoints arrayCount:memoryCount andImage:[[info objectForKey:UIImagePickerControllerOriginalImage] copy]];
 	[_tool setDelegate:self];
 	

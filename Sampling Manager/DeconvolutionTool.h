@@ -23,6 +23,7 @@ typedef struct _DirectionVector {
     DirectionVector _vector;
 	
     CGFloat *_pixelInfoOfKernelImage;
+    DSPSplitComplex _KernelFFT;
     
     CGFloat *_redChannel;
     CGFloat *_greenChannel;
@@ -30,6 +31,8 @@ typedef struct _DirectionVector {
     
     int width;
     int height;
+    int log2W;
+    int log2H;
     
     FFTSetup fftsetup;
 }

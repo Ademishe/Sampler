@@ -85,6 +85,9 @@ typedef enum {
     free(resultOfGreenChannel);
     free(resultOfBlueChannel);
     vDSP_destroy_fftsetup(fftsetup);
+    free(_KernelFFT.realp);
+    _KernelFFT.realp = _KernelFFT.imagp = NULL;
+    
     if ([self.delegate respondsToSelector:@selector(deconvolitonTool:hasFinished:)]) {
         [self.delegate deconvolitonTool:self hasFinished:self.resultImage];
     }
@@ -175,8 +178,14 @@ typedef enum {
 	}
     CGFloat *workingChannel = *pointerToWorkingChannel;
     
+    CGFloat *tempMemory = (CGFloat *)malloc(width * height * sizeof(CGFloat));
+    DSPSplitComplex ResultOfFFT = {tempMemory, tempMemory + width*height/2};
+    vDSP_ctoz((DSPComplex *)workingChannel, 2, &ResultOfFFT, 1, width*height/2);
+    vDSP_fft2d_zrip(fftsetup, &ResultOfFFT, 1, 0, log2W, log2H, FFT_FORWARD);
     
     
+    
+    free(tempMemory);
     free(*pointerToWorkingChannel);
     *pointerToWorkingChannel = NULL;
     return resultArray;
@@ -184,9 +193,18 @@ typedef enum {
 
 - (void)prepareForFFT
 {
-    int log2W = log2(width) + 1;
-    int log2H = log2(height) + 1;
+    log2W = log2(width) + 1;
+    log2H = log2(height) + 1;
     fftsetup = vDSP_create_fftsetup(MAX(log2W, log2H), kFFTRadix2);
+    
+    float *ResultMemory = (float *)malloc(width*height*sizeof(float));
+    
+    _KernelFFT.realp = ResultMemory;
+    _KernelFFT.imagp = ResultMemory + width*height/2;
+    vDSP_ctoz((DSPComplex *)_pixelInfoOfKernelImage, 2, &_KernelFFT, 1, width*height/2);
+    vDSP_fft2d_zrip(fftsetup, &_KernelFFT, 1, 0, log2W, log2H, FFT_FORWARD);
+    //i should think about preparations of fft
+    //and in the method above it is necessary to process these ffts
 }
 
 - (void)getPixelInfoOfSourceImage
