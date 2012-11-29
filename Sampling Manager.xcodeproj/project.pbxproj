@@ -22,8 +22,9 @@
 		7600CB6A15FFC0F900BB08F0 /* Sampling_ManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7600CB6915FFC0F900BB08F0 /* Sampling_ManagerTests.m */; };
 		7600CB7415FFC45C00BB08F0 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7600CB7315FFC45C00BB08F0 /* CoreMotion.framework */; };
 		763DEE52160077EA00CE8E3E /* PlotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 763DEE51160077EA00CE8E3E /* PlotView.m */; };
+		76D6E94C1667FBD4004FC55A /* libfftw3f.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76D6E94B1667FBD4004FC55A /* libfftw3f.a */; };
+		76D6E94E1667FC0B004FC55A /* libfftw3f.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76D6E94B1667FBD4004FC55A /* libfftw3f.a */; };
 		76DB2B70164FB98D0089E57A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DB2B6F164FB98D0089E57A /* Default-568h@2x.png */; };
-		76DB2B7B164FD5980089E57A /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76DB2B7A164FD5980089E57A /* Accelerate.framework */; };
 		76EE39AE164EE4D20050E8FE /* DeconvolutionTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 76EE39AD164EE4D20050E8FE /* DeconvolutionTool.m */; };
 /* End PBXBuildFile section */
 
@@ -62,8 +63,9 @@
 		763DEE51160077EA00CE8E3E /* PlotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlotView.m; sourceTree = "<group>"; };
 		7693A7971606112400BA22A0 /* OpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLView.h; sourceTree = "<group>"; };
 		7693A7981606112400BA22A0 /* OpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLView.m; sourceTree = "<group>"; };
-		76DB2B6F164FB98D0089E57A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
-		76DB2B7A164FD5980089E57A /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		76D6E94B1667FBD4004FC55A /* libfftw3f.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfftw3f.a; path = "Sampling Manager/libfftw3f.a"; sourceTree = "<group>"; };
+		76D6E94D1667FBE2004FC55A /* fftw3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fftw3.h; path = "Sampling Manager/fftw3.h"; sourceTree = "<group>"; };
+		76DB2B6F164FB98D0089E57A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		76EE39AC164EE4D20050E8FE /* DeconvolutionTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeconvolutionTool.h; sourceTree = "<group>"; };
 		76EE39AD164EE4D20050E8FE /* DeconvolutionTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeconvolutionTool.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -73,7 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				76DB2B7B164FD5980089E57A /* Accelerate.framework in Frameworks */,
+				76D6E94E1667FC0B004FC55A /* libfftw3f.a in Frameworks */,
 				7600CB7415FFC45C00BB08F0 /* CoreMotion.framework in Frameworks */,
 				7600CB3F15FFC0F900BB08F0 /* UIKit.framework in Frameworks */,
 				7600CB4115FFC0F900BB08F0 /* Foundation.framework in Frameworks */,
@@ -88,6 +90,7 @@
 				7600CB5D15FFC0F900BB08F0 /* SenTestingKit.framework in Frameworks */,
 				7600CB5E15FFC0F900BB08F0 /* UIKit.framework in Frameworks */,
 				7600CB5F15FFC0F900BB08F0 /* Foundation.framework in Frameworks */,
+				76D6E94C1667FBD4004FC55A /* libfftw3f.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,7 +119,8 @@
 		7600CB3D15FFC0F900BB08F0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				76DB2B7A164FD5980089E57A /* Accelerate.framework */,
+				76D6E94D1667FBE2004FC55A /* fftw3.h */,
+				76D6E94B1667FBD4004FC55A /* libfftw3f.a */,
 				7600CB7315FFC45C00BB08F0 /* CoreMotion.framework */,
 				7600CB3E15FFC0F900BB08F0 /* UIKit.framework */,
 				7600CB4015FFC0F900BB08F0 /* Foundation.framework */,
@@ -385,7 +389,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
+				VALID_ARCHS = "armv7 armv7s";
 			};
 			name = Debug;
 		};
@@ -405,26 +411,31 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "armv7 armv7s";
 			};
 			name = Release;
 		};
 		7600CB6E15FFC0F900BB08F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Sampling Manager/Sampling Manager-Prefix.pch";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Sampling Manager/Sampling Manager-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/opt/local/lib,
 					"\"$(SDKROOT)/usr/lib/system\"",
+					"\"$(SRCROOT)/Sampling Manager\"",
 				);
-				OTHER_LDFLAGS = "";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -432,17 +443,20 @@
 		7600CB6F15FFC0F900BB08F0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Sampling Manager/Sampling Manager-Prefix.pch";
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Sampling Manager/Sampling Manager-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/opt/local/lib,
 					"\"$(SDKROOT)/usr/lib/system\"",
+					"\"$(SRCROOT)/Sampling Manager\"",
 				);
-				OTHER_LDFLAGS = "";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -458,6 +472,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Sampling Manager/Sampling Manager-Prefix.pch";
 				INFOPLIST_FILE = "Sampling ManagerTests/Sampling ManagerTests-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../mylib/lib\"",
+					"\"$(SRCROOT)\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
@@ -475,6 +494,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Sampling Manager/Sampling Manager-Prefix.pch";
 				INFOPLIST_FILE = "Sampling ManagerTests/Sampling ManagerTests-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../mylib/lib\"",
+					"\"$(SRCROOT)\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
